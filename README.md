@@ -1,13 +1,5 @@
 # Credit Card Parser
-The goal of this simple script is to scan a prepared file supossedly containing credit cards against the luhn checksum algorithm and also to well-known credit card formats using regular expresions, contained within a CSV file, and printing everything to stdout.
-
-**Input file example (cc.txt):**
-* 4242424242424242
-* 4000056655665556
-* 5555555555554444
-* 2223003122003222
-* 5200828282828210
-* 5105105105105100
+The goal of this simple script is to scan files supossedly containing credit cards against the luhn checksum algorithm and also to well-known credit card formats using regular expresions, contained within a CSV file, and printing everything to stdout.
 
 **Credit Card regex file example (regexcard.csv):**
 * Mastercard,\b(5[1-5]\d{2}|222[1-9]|22[3-9]\d|2[3-6]\d{2}|27[01]\d|2720)\d{12}\b
@@ -17,9 +9,9 @@ The goal of this simple script is to scan a prepared file supossedly containing 
 * JCB,\b(352[89]|35[3-8]\d)\d{12}\b
 
 **Output Example (>>stdout):**
-* 4242424242424242, Luhn, , , Visa, , , , , , , , ,
-* 4000056655665556, Luhn, , , Visa, , , , , , , , ,
-* 5555555555554444, Luhn, Mastercard, , , , , , , , , , ,
-* 2223003122003222, Luhn, Mastercard, , , , , , , , , , ,
-* 5200828282828210, Luhn, Mastercard, , , , , , , , , , ,
-* 5105105105105100, Luhn, Mastercard, , , , , , , , , , ,
+* file1, , , , Visa, , , , , , , , ,
+* file2, , , Visa, , , , , , , , ,
+* file3, Mastercard, , , , , , , , , , ,
+* file4, Mastercard, , , , , , , , , , ,
+* file5, Mastercard, , , , , , , , , , ,
+* file6, Mastercard, , , , , , , , , , ,
