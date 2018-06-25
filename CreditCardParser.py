@@ -27,14 +27,13 @@ def searchInLine(textLine, regex_list):
     Prints the credit card match if it occurs
     Retuns 1 if a CC is found 0 if not
     '''
-    # TODO Search for multiple matches within single line
+    brands_result = []
     for regEx in regex_list:
-        m = re.search(r"%s" % regEx[1].rstrip(), textLine)
-        if m:
-            if checksum(m.group(0)):
-                return regEx[0]
-            else:
-                return None
+        m = re.finditer(r"%s" % regEx[1], textLine)
+        for match in m:
+            if checksum(match.group()):
+                brands_result.append(regEx[0])
+    return brands_result
 
 
 def textFSearch(cc_path, regex_list):
@@ -47,8 +46,8 @@ def textFSearch(cc_path, regex_list):
     with open(cc_path, 'r', encoding="latin-1") as cc_file_data:
         for cc_file_line in cc_file_data:
             foundtxt = searchInLine(cc_file_line, regex_list)
-            if foundtxt:
-                txt_cc_list[foundtxt] += 1
+            for result in foundtxt:
+                txt_cc_list[result] += 1
     return list(txt_cc_list.values())
 
 
@@ -68,8 +67,8 @@ def pdfFSearch(cc_path, regex_list):
         buf = io.StringIO(pageObj.extractText())
         for line in buf:
             foundpdf = searchInLine(line, regex_list)
-            if foundpdf:
-                pdf_cc_list[foundpdf] += 1
+            for result in foundpdf:
+                pdf_cc_list[result] += 1
         pdfPageCount += 1
     # If everything included in the PDF is scanned (PyPDF cannot extract text from images).
     if text == "":
@@ -88,8 +87,8 @@ def excelFSearch(cc_path, regex_list):
         for sheet in wb.sheets():
             for row in range(sheet.nrows):
                 foundxls = searchInLine(','.join(sheet.row_values(row)), regex_list)
-                if foundxls:
-                    xls_cc_list[foundxls] += 1
+                for result in foundxls:
+                    xls_cc_list[result] += 1
     return list(xls_cc_list.values())
 
 
@@ -167,12 +166,14 @@ if __name__ == '__main__':
             print('Usage CreditCardSearch.py -i <inputfile> -d <inputdirectory> | -o <outputfile>')
             sys.exit()
         elif opt in ("-i"):
+            # TODO Detect if is file
             inputfile = arg
         elif opt in ("-d"):
+            # TODO Detect if is dir
             inputdir = arg
 
     # File extension support variables
-    # TODO PDF, docx, pptx, etc.
+    # TODO docx, pptx, eml, msg, etc.
     tested_files = ['txt', 'csv', 'xls', 'xlsx', 'rtf', 'xml', 'html', 'json', 'zip', 'pdf']
     unsupported_files = ['doc', 'docx', 'pptx', 'jpg', 'gif',
                          'png', 'mp3', 'mp4', 'wav', 'aiff', 'mkv', 'avi', 'exe', 'dll']
